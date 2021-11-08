@@ -10,15 +10,9 @@ export const Container = styled.main`
 `;
 
 export const MainSection = styled.section`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     
     width: 60%;
-    background-color: #FFF;
     border-radius: 29px;
-
-    padding: 2rem 0;
 
     ul {
         display: grid;
@@ -33,20 +27,8 @@ export const MainSection = styled.section`
             justify-content: center;
             align-items: center;
             
-            cursor: pointer;
-            
-            span {
-                width: 60px;
-                height: 60px;
-                margin-bottom: 1rem;
-                border-radius: 50%;
-                background-color: pink;
-                
-                display: flex;
-                align-items: center;
-                justify-content: center;                
-            }
-            
+            width: 60px;
+            height: 60px;
         }
     }
 `;
