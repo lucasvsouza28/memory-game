@@ -91,7 +91,9 @@ export const Game = ({
     
     return (
         <Container>
-            <MainSection>
+            <MainSection
+                cols={colsCount}
+            >
                 <ul>
                     { cards.map((c, i) => (
                         <li
