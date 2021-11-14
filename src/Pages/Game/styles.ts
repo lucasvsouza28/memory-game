@@ -9,20 +9,18 @@ export const Container = styled.main`
     height: 100vh;
 `;
 
-export const MainSection = styled.section`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+type MainSectionProps = {
+    cols: number;
+}
+
+export const MainSection = styled.section<MainSectionProps>`
     
     width: 60%;
-    background-color: #FFF;
     border-radius: 29px;
-
-    padding: 2rem 0;
 
     ul {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(${ props => props.cols }, 1fr);
         grid-gap: 16px;
         width: 100%;
         
@@ -33,20 +31,18 @@ export const MainSection = styled.section`
             justify-content: center;
             align-items: center;
             
-            cursor: pointer;
-            
-            span {
-                width: 60px;
-                height: 60px;
-                margin-bottom: 1rem;
-                border-radius: 50%;
-                background-color: pink;
-                
-                display: flex;
-                align-items: center;
-                justify-content: center;                
-            }
-            
+            width: 60px;
+            height: 60px;
         }
     }
+`;
+
+export const PlayersListContainer = styled.div`
+    margin-top: 2rem;
+`;
+
+export const PlayerItem = styled.div<{ active: boolean }>`
+    border: ${ props => props.active ? '1px solid black' : ''};
+    display: flex;
+    justify-content: space-evenly;
 `;
