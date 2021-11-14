@@ -36,3 +36,13 @@ export const MainSection = styled.section<MainSectionProps>`
         }
     }
 `;
+
+export const PlayersListContainer = styled.div`
+    margin-top: 2rem;
+`;
+
+export const PlayerItem = styled.div<{ active: boolean }>`
+    border: ${ props => props.active ? '1px solid black' : ''};
+    display: flex;
+    justify-content: space-evenly;
+`;
