@@ -1,12 +1,14 @@
 import { Switch, Router, Route, useHistory } from "react-router-dom";
-import { Game } from "./Pages/Game";
-import { Home } from './Pages/Home';
+import { Game } from "./pages/Game";
+import { Home } from './pages/Home';
+import { NewGame } from './pages/NewGame';
 
 export const Routes = () => {
     const history = useHistory();
 
     const routes = [
         { id: 'home', path: '/', exact: true, component: Home },
+        { id: 'home', path: '/new-game', component: NewGame },
         { id: 'game', path: '/game', component: Game },
     ];
 
