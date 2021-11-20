@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router';
+import { Title } from '../../components/Title';
 
 import {
     Container,
@@ -23,6 +24,7 @@ export const NewGame = () => {
 
     return (
         <Container>
+            <Title />
             <section>
                 <Row>
                     <RowTitle>
