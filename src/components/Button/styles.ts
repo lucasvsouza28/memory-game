@@ -4,6 +4,9 @@ export const Container = styled.button<{
     type: 'primary' | 'secondary',
     active: boolean,
 }>`
+    display: flex;
+    align-items: center;
+    justify-content:center;
     cursor: pointer;
     background-color: ${ props => props.active ? (props.type === 'primary' ? '#FDA214' : '#304859') : '#BCCED9' };
     border-radius: 26px;
