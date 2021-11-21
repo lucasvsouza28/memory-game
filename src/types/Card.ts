@@ -1,6 +1,8 @@
 export type CardType = {
-    key: string;
-    number: number;
-    selected: boolean;
+    id: string;
+    cardKey: string;
+    value: string;
+    active: boolean;
+    order: number;
     foundedBy?: string;
 };

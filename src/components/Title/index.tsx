@@ -1,9 +1,17 @@
-import React from 'react'
 import * as SC from './styles';
 
-export const Title = () => {
+type Props = {
+    variant?: 'primary' | 'secondary';
+}
+
+export const Title = ({
+    variant = 'primary',
+}: Props) => {
     return (
-        <SC.Container>
+        <SC.Container
+            variant={variant}
+            href="/"
+        >
             memory            
         </SC.Container>
     )

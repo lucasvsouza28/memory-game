@@ -11,7 +11,7 @@ export const Routes = () => {
         { id: 'login', path: '/', exact: true, component: Login },
         { id: 'home', path: '/home', component: Home },
         { id: 'new-game', path: '/new-game', component: NewGame },
-        { id: 'game', path: '/game', component: Game },
+        { id: 'game', path: '/game/:key', component: Game },
     ];
 
     return (

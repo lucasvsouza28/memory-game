@@ -8,8 +8,14 @@ import {
 import {
     CardType
 } from '../../../../types/Card';
+import { database } from '../../../../services/firebase';
 
 type Props = {
+    gameKey: string;
+    cards: CardType[];
+    currentPlayerId: string | undefined;
+    userId: string | undefined;
+
     card: CardType;
 
     className?: string;
@@ -22,6 +28,11 @@ type Props = {
 }
 
 export const FlipCard = ({
+    gameKey,
+    cards,
+    currentPlayerId,
+    userId,
+
     card,
 
     children,
@@ -30,15 +41,19 @@ export const FlipCard = ({
     pairFounded,
 
     onSelected
-}: Props) => {
-    const [active, setActive] = useState<boolean>(false);
-    
+}: Props) => {    
     const handleActive = (card: CardType) => {
-        if (pairFounded) return;
+        if (currentPlayerId !== userId) return;
 
-        setActive(!active);
+        if (pairFounded) return;
+        
+        const cardIndex = cards.findIndex(c => c.id === card.id);
+        const cardRef = database.ref(`/games/${gameKey}/cards/${cardIndex}`)
+
+        cardRef.update({ ...card, active: true });
+
         onSelected(card, () => {
-            setActive(false);
+            cardRef.update({ ...card, active: false });
         });
     }
 
@@ -49,12 +64,14 @@ export const FlipCard = ({
             onClick={() => handleActive(card)}
         >
             <Back
-                active={active}
+                active={card.active}
                 pairFounded={pairFounded}
+                blocked={currentPlayerId !== userId}
             />
             <Front
-                active={active}
+                active={card.active}
                 pairFounded={pairFounded}
+                blocked={currentPlayerId !== userId}
             >
                 { children }
             </Front>

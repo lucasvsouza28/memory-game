@@ -16,11 +16,11 @@ export const Container = styled.main`
         
         padding: 24px;
         width: 327px;
-        height: 386px;
+        min-height: 386px;
 
         @media(min-width: 768px) {
             padding: 56px;
-            height: 559px;
+            min-height: 559px;
             width: 654px;
         }
     }

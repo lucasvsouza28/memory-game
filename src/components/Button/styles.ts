@@ -1,25 +1,31 @@
 import styled from 'styled-components';
 
-export const Container = styled.button<{
-    type: 'primary' | 'secondary',
-    active: boolean,
-}>`
+type Props = {
+    variant?: 'primary' | 'secondary' | 'opaque';
+    active: boolean;
+}
+
+export const Container = styled.button<Props>`
     display: flex;
     align-items: center;
     justify-content:center;
     cursor: pointer;
-    background-color: ${ props => props.active ? (props.type === 'primary' ? '#FDA214' : '#304859') : '#BCCED9' };
+    background-color: ${ props => props.active ? (props.variant === 'primary' ? '#FDA214' : props.variant === 'secondary' ? '#304859' : '#DFE7EC') : '#BCCED9' };
     border-radius: 26px;
     outline: none;
     border: none;
     font-weight: bold;
     text-align: center;
-    color: #FCFCFC;
+    color: ${ props => props.variant !== 'opaque' ? '#FCFCFC' : '#304859' };
     
     &:active {
-        transform: scale(.9)
+        transform: scale(.98)
     }
     
+    &:hover{
+        filter: opacity(0.7);
+    }
+
     font-size: 16px;
     line-height: 20px;
     height: 40px;
@@ -30,5 +36,4 @@ export const Container = styled.button<{
         line-height: 32px;
         height: 52px;
     }
-
 `;

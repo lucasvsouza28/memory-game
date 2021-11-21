@@ -7,30 +7,22 @@ import {
 } from 'react';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../services/firebase';
+import { UserType } from '../types/User';
 
 type PlayerType = {
     name: string;
     id: string;
 }
 
-export type User = {
-    id: string;
-    name: string;
-    avatar: string;
-};
-
 type GameContextType = {
-    user: User | null;
+    user: UserType | null;
     sigin: () => void;
 
-    players: PlayerType[];
-    setPlayers: (players: PlayerType[]) => void;
-    currentPlayer: PlayerType | null;
-    setCurrentPlayer: (player: PlayerType | null) => void;
+    currentGameKey: string;
+    changeCurrentGameKey: (gameKey: string) => void;
+
     gameEnded: boolean;
     handleGameEnded: (value: boolean) => void;
-
-    handleNextPlayer: () => void;
 };
 
 const gameContext = createContext({} as GameContextType);
@@ -43,15 +35,10 @@ type Props = {
 export default ({
     children,
 }: Props) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [players, setPlayers] = useState<PlayerType[]>([
-        { id: '1', name: 'Nina' },
-        { id: '2', name: 'Drica' },
-        { id: '3', name: 'Lusca' },
-    ]);
-    const [currentPlayer, setCurrentPlayer] = useState<PlayerType | null>(null);
+    const [user, setUser] = useState<UserType | null>(null);
+    const [currentGameKey, setCurrentGameKey] = useState<string>('');
     const [gameEnded, setGameEnded] = useState<boolean>(false);
-
+    
     const sigin = async () => {
         const provider = new GoogleAuthProvider();
 
@@ -76,19 +63,9 @@ export default ({
         setGameEnded(value);
     }
 
-    const handleNextPlayer = () => {
-        if (!players.length) return;
-
-        if (!currentPlayer) {
-            setCurrentPlayer({ ...players[0] })
-        } else {
-
-            const currentPlayerIndex = players.findIndex(p => p.id === currentPlayer?.id);
-
-            if (currentPlayerIndex === players.length - 1) setCurrentPlayer({ ...players[0] });
-            else setCurrentPlayer({ ...players[currentPlayerIndex + 1] });
-        }
-    };
+    const changeCurrentGameKey = (gameKey: string) => {
+        setCurrentGameKey(gameKey);
+    }
 
     useEffect(() => {
         const cancel = auth.onAuthStateChanged(user => {
@@ -111,22 +88,15 @@ export default ({
           cancel();
         }
       }, [])
-
-    useEffect(() => {
-        handleNextPlayer();
-    }, [])
     
     return (
         <gameContext.Provider value={{
             sigin,
             user,
-            players,
-            setPlayers,
-            currentPlayer,
-            setCurrentPlayer,
             gameEnded,
             handleGameEnded,
-            handleNextPlayer
+            currentGameKey,
+            changeCurrentGameKey,
         }}>
             { children }
         </gameContext.Provider>
