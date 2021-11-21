@@ -1,7 +1,7 @@
 export type CardType = {
     id: string;
     cardKey: string;
-    number: number;
+    value: string;
     active: boolean;
     order: number;
     foundedBy?: string;

@@ -1,7 +1,9 @@
 import {
+    Component,
     useEffect,
     useState
 } from 'react';
+import * as Icons from 'react-icons/gi';
 import { useHistory, useRouteMatch } from 'react-router';
 import { Title } from '../../components/Title';
 import { useGameContext } from '../../contexts/game';
@@ -9,13 +11,14 @@ import { database } from '../../services/firebase';
 import { CardType } from '../../types/Card';
 import { GameType } from '../../types/GameType';
 import { UserType } from '../../types/User';
-import { restartGame, createNewGameFromExistent} from '../../services/game';
+import { restartGame, createGameFromExistent} from '../../services/game';
 import { FlipCard } from './components/FlipCard';
 
 import {
     Container,
     HeaderContainer,
     HeaderButton,
+    HeaderAvatar,
     ButtonsContainer,
     CardsContainer,
     PlayersListContainer,
@@ -24,6 +27,7 @@ import {
     PlayerName,
     PlayerPoints,
     CurrentPlayerIndicator,
+    PlayerItemAvatar,
 } from './styles';
 
 type GameProps = {
@@ -37,6 +41,7 @@ type SelectedCardType = {
 
 export const Game = ({
 }: GameProps) => {
+    const [theme, setTheme] = useState('');
     const [players, setPlayers] = useState<UserType[]>([]);
     const [currentPlayer, setCurrentPlayer] = useState<UserType | null>(null);
     const [gridSize, setGridSize] = useState(4);
@@ -112,6 +117,12 @@ export const Game = ({
         }
     }
 
+    const getIcon = (icon: string) => {
+        if (!(icon in Icons)) return null;
+
+        return <> { (Icons as any)[icon]() } </>;
+    }
+
     const renderGame = () => (
         <MainSection
             cols={gridSize}
@@ -124,18 +135,24 @@ export const Game = ({
                     //.sort((a, b) => a.order > b.order ? -1 : b.order < a.order ? 1 : 0)
                     .map((c, i) => (
                         <li
-                            key={c.number + '_' + i}
+                            key={c.value + '_' + i}
                         >
                             <FlipCard
                                 gameKey={currentGameKey}
                                 cards={cards}
                                 card={c}
-                                pairFounded={founded.some(f => f.number === c.number)}
+                                pairFounded={founded.some(f => f.value === c.value)}
                                 onSelected={handleCardSelected}
                                 currentPlayerId={currentPlayer?.id}
                                 userId={user?.id}
                             >
-                                { c.number }
+                                {
+                                    theme === 'Numbers' ? (
+                                        c.value
+                                    ) : (
+                                        getIcon(c.value)
+                                    )
+                                }
                             </FlipCard>
                         </li>
                     )) }
@@ -159,7 +176,9 @@ export const Game = ({
                         loggedInPlayer={currentPlayer?.id === user?.id}
                     />
                     
-                    <img src={p.avatar} height="30" width="30" style={{}} />
+                    <PlayerItemAvatar
+                        src={p.avatar}
+                    />
 
                     <PlayerName
                         active={isPlayerActive(p)}
@@ -197,10 +216,11 @@ export const Game = ({
     }
 
     const handleNewGame = async () => {
-        const newGameKey = await createNewGameFromExistent(currentGameKey);
+        const newGameKey = await createGameFromExistent(currentGameKey);
 
         if (newGameKey) {
             setCurrentSelection(null);
+            setTheme('');
             setFounded([]);
             setCards([]);
             setPlayers([]);
@@ -224,6 +244,7 @@ export const Game = ({
                 return;
             };
 
+            setTheme(gameVal.theme);
             setGridSize(gameVal.gridSize);
             setCards([...gameVal.cards]);
             setPlayers([...gameVal.players]);
@@ -260,6 +281,10 @@ export const Game = ({
                     >
                         New Game
                     </HeaderButton>
+
+                    <HeaderAvatar
+                        src={user?.avatar}
+                    />
                 </ButtonsContainer>
             </HeaderContainer>
             { gameEnded ? renderWinner() : renderGame() }

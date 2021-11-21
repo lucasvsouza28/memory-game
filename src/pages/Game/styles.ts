@@ -14,7 +14,8 @@ export const HeaderContainer = styled.header`
     display: flex;
     width: 80%;
     justify-content: space-between;
-    `;
+    align-items: flex-start;
+`;
 
 export const HeaderButton = styled(Button)`
     width: 125px;
@@ -25,9 +26,17 @@ export const HeaderButton = styled(Button)`
     }
 `;
 
+export const HeaderAvatar = styled.img`
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    align-self: center;
+`;
+
 export const ButtonsContainer = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: flex-start;
     gap: 16px;
 `;
 
@@ -117,4 +126,10 @@ export const CurrentPlayerIndicator = styled.div<{ show: boolean, loggedInPlayer
     width: 19px;
     height: 19px;
     background-color: ${ props => props.loggedInPlayer ? '#FDA214' : '#DFE7EC' };;
+`;
+
+export const PlayerItemAvatar = styled.img`
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
 `;

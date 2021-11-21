@@ -10,6 +10,7 @@ export const Title = ({
     return (
         <SC.Container
             variant={variant}
+            href="/"
         >
             memory            
         </SC.Container>

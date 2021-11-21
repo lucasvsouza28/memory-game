@@ -4,7 +4,7 @@ import { Button } from '../../components/Button';
 import { Title } from '../../components/Title';
 import { database } from '../../services/firebase';
 import { useGameContext } from '../../contexts/game';
-import { getCardsAsNumbers } from '../../services/game';
+import { createGame, getCardsAsNumbers, joinExistingGame } from '../../services/game';
 
 import {
     Container,
@@ -19,7 +19,7 @@ import { GameType } from '../../types/GameType';
 
 export const NewGame = () => {
     const [theme, setTheme] = useState<'Numbers' | 'Icons'>('Numbers');
-    const [numberOfPlayers, setNumberOfPlayers] = useState<number>(1);
+    const [playersCount, setPlayersCount] = useState<number>(1);
     const [gridSize, setGridSize] = useState<number>(4);
     const history = useHistory();
     const { user, sigin } = useGameContext();
@@ -27,28 +27,19 @@ export const NewGame = () => {
     const handleCreateGame = async () => {
         if (!user) await sigin();
 
-        const roomsRef = database.ref('/games');
+        const newGamekey = await createGame(theme, gridSize, playersCount, user!);
 
-        const newRoom = await roomsRef.push({
-            gridSize,
-            cards: theme === 'Numbers' ? await getCardsAsNumbers(gridSize) : new Error('Not implemented'),
-            closed: false,
-            foundedCards: [],
-            players: [{ ...user }],
-            currentPlayer: {...user},
-        } as GameType);
-
-        history.push(`/game/${newRoom.key}`);
+        history.push(`/game/${newGamekey}`);
     };
 
     const handleJoinGame = async () => {
         const gameId = prompt('game id?');
-        const playersRef = database.ref('/games/' + gameId + '/players');
-        const players = (await playersRef.get()).val();
 
-        playersRef.update([...players, user]);
-
-        history.push('/game/' + gameId);
+        if (gameId) {
+            const joined = await joinExistingGame(gameId, user!);
+    
+            if (joined) history.push(`/game/${gameId}`);
+        }
     };
 
     return (
@@ -83,8 +74,8 @@ export const NewGame = () => {
                             <NumberButton
                                 key={number}
                                 variant='secondary'
-                                active={numberOfPlayers === number}
-                                onClick={() => setNumberOfPlayers(number)}
+                                active={playersCount === number}
+                                onClick={() => setPlayersCount(number)}
                             >
                                 {number}
                             </NumberButton>
