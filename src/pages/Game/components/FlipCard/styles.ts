@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.div`    
     position: relative;
     margin-bottom: 1rem;    
 `;
@@ -8,10 +8,11 @@ export const Container = styled.div`
 type FlipCardProps = {
     active: boolean;
     pairFounded: boolean;
+    blocked: boolean;
 };
 
 const FlipCard = styled.span<FlipCardProps>`
-    cursor: ${ props => !props.pairFounded ? 'pointer' : 'initial' };
+    cursor: ${ props => props.blocked ? 'not-allowed' : !props.pairFounded ? 'pointer' : 'inherit' };
 
     color: #FCFCFC;
     width: 60px;
@@ -38,5 +39,5 @@ export const Back = styled(FlipCard)`
 `;
 
 export const Front = styled(FlipCard)`
-    transform: ${ props => !props.active ? "rotateY(180deg)" : ""};
+    transform: ${ props => !props.active && !props.pairFounded ? "rotateY(180deg)" : ""};
 `;

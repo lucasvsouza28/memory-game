@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router';
+import { Button } from '../../components/Button';
 import { Title } from '../../components/Title';
+import { database } from '../../services/firebase';
+import { useGameContext } from '../../contexts/game';
+import { getCardsAsNumbers } from '../../services/game';
 
 import {
     Container,
@@ -11,15 +15,40 @@ import {
     NumberButton,
     StartGameButton,
 } from './styles';
+import { GameType } from '../../types/GameType';
 
 export const NewGame = () => {
     const [theme, setTheme] = useState<'Numbers' | 'Icons'>('Numbers');
     const [numberOfPlayers, setNumberOfPlayers] = useState<number>(1);
     const [gridSize, setGridSize] = useState<number>(4);
     const history = useHistory();
+    const { user, sigin } = useGameContext();
 
-    const handleCreateGame = () => {
-        history.push('/game');
+    const handleCreateGame = async () => {
+        if (!user) await sigin();
+
+        const roomsRef = database.ref('/games');
+
+        const newRoom = await roomsRef.push({
+            gridSize,
+            cards: theme === 'Numbers' ? await getCardsAsNumbers(gridSize) : new Error('Not implemented'),
+            closed: false,
+            foundedCards: [],
+            players: [{ ...user }],
+            currentPlayer: {...user},
+        } as GameType);
+
+        history.push(`/game/${newRoom.key}`);
+    };
+
+    const handleJoinGame = async () => {
+        const gameId = prompt('game id?');
+        const playersRef = database.ref('/games/' + gameId + '/players');
+        const players = (await playersRef.get()).val();
+
+        playersRef.update([...players, user]);
+
+        history.push('/game/' + gameId);
     };
 
     return (
@@ -34,7 +63,7 @@ export const NewGame = () => {
                         { ['Numbers', 'Icons'].map(t => (
                             <ThemeButton
                                 key={t}
-                                type="secondary"
+                                variant="secondary"
                                 active={theme === t}
                                 onClick={() => setTheme(t)}
                             >
@@ -53,7 +82,7 @@ export const NewGame = () => {
                         { [1, 2, 3, 4].map(number => (
                             <NumberButton
                                 key={number}
-                                type='secondary'
+                                variant='secondary'
                                 active={numberOfPlayers === number}
                                 onClick={() => setNumberOfPlayers(number)}
                             >
@@ -73,7 +102,7 @@ export const NewGame = () => {
                         { [4, 6].map(g => (
                             <ThemeButton
                                 key={g}
-                                type="secondary"
+                                variant="secondary"
                                 active={gridSize === g}
                                 onClick={() => setGridSize(g)}
                             >
@@ -89,6 +118,16 @@ export const NewGame = () => {
                     >
                         Start Game
                     </StartGameButton>
+                    <Button
+                        style={{
+                            width: '100%',
+                            marginTop: '1rem',
+                        }}
+                        variant="secondary"
+                        onClick={handleJoinGame}
+                    >
+                        Join Game
+                    </Button>
                 </Row>
             </section>
         </Container>

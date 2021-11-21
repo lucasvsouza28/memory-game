@@ -4,7 +4,7 @@ import {
 } from './styles';
 
 type Props = {
-    type?: 'primary' | 'secondary';
+    variant?: 'primary' | 'secondary' | 'opaque';
     active?: boolean;
     children: ReactNode;
     className?: string;
@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const Button = ({
-    type = 'primary',
+    variant = 'primary',
     active = true,
     children,
     className,
@@ -24,7 +24,7 @@ export const Button = ({
         <Container
             className={className}
             style={style}
-            type={type}
+            variant={variant}
             active={active}
             onClick={onClick}
         >
