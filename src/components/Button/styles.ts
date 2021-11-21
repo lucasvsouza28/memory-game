@@ -22,6 +22,10 @@ export const Container = styled.button<Props>`
         transform: scale(.98)
     }
     
+    &:hover{
+        filter: opacity(0.7);
+    }
+
     font-size: 16px;
     line-height: 20px;
     height: 40px;

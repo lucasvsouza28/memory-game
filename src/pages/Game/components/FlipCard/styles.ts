@@ -15,10 +15,8 @@ const FlipCard = styled.span<FlipCardProps>`
     cursor: ${ props => props.blocked ? 'not-allowed' : !props.pairFounded ? 'pointer' : 'inherit' };
 
     color: #FCFCFC;
-    width: 60px;
-    height: 60px;
     border-radius: 50%;
-
+    
     background-color: ${ props => props.pairFounded ? '#FDA214' : ( props.active ? '#BCCED9' : '#304859' ) };
     
     display: flex;
@@ -32,6 +30,18 @@ const FlipCard = styled.span<FlipCardProps>`
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: all 0.3s linear;
+    
+    &:hover {
+        filter: opacity(0.7);
+    }
+
+    width: 46px;
+    height: 46px;
+
+    @media(min-width: 82px) {
+        width: 46px;
+        height: 46px;
+    }
 `;
 
 export const Back = styled(FlipCard)`

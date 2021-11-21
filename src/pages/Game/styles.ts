@@ -12,9 +12,13 @@ export const Container = styled.main`
 
 export const HeaderContainer = styled.header`
     display: flex;
-    width: 80%;
     justify-content: space-between;
     align-items: flex-start;
+    width: 90%;
+
+    @media(min-width: 768px) {
+        width: 80%;
+    }
 `;
 
 export const HeaderButton = styled(Button)`
@@ -48,28 +52,48 @@ export const MainSection = styled.section<CardsContainerProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%;
+    width: 90%;
+
+    @media(min-width: 768px) {
+        width: 80%;
+    }
 `;
 
 export const CardsContainer = styled.div<CardsContainerProps>`    
-    width: ${props => props.cols === 4 ? '532px' : '572px'};
+    width: 327px;
+
+    @media(min-width: 768px){
+        width: ${props => props.cols === 4 ? '532px' : '572px'};
+    }
 
     ul {
         display: grid;
         justify-content: space-between;
+        justify-items: center;
         grid-template-columns: repeat(${ props => props.cols }, 1fr);
-        grid-gap: 16px;
+        
+        
         width: 100%;
+
+        grid-gap: ${ props => props.cols === 4 ? '12px' : '9px' };
+
+        @media(min-width: 768px){
+            grid-gap: ${ props => props.cols === 4 ? '20px' : '16 px' };
+        }
         
         li {
             list-style: none;
             
             display: flex;
-            justify-content: center;
             align-items: center;
             
-            width: 60px;
-            height: 60px;
+            width: 46px;
+            height: 46px;
+
+            @media(min-width: 82px) {
+                width: 46px;
+                height: 46px;
+            }
         }
     }
 `;
@@ -77,7 +101,7 @@ export const CardsContainer = styled.div<CardsContainerProps>`
 export const PlayersListContainer = styled.div`
     display: flex;
     width: 100%;
-    margin-top: 4rem;
+    margin-top: 83px;
     justify-content: space-between;
 `;
 
@@ -92,11 +116,22 @@ export const PlayerItem = styled.div<PlayerItemProps>`
     align-items: center;
     background: ${ props => props.active ? '#FDA214' : '#DFE7EC'};
     border-radius: 10px;
+
+    flex-direction: column;
+    width: 64px;
+    height: 70px;
+    padding: 5px 0;
     
     @media(min-width: 768px){
+        flex-direction: row;
+        width: 164px;
+        height: 80px;
+        padding: 0 21px;
+    }
+
+    @media(min-width: 1024px){
         width: 255px;
         height: 72px;
-        padding: 0 21px;
     }
 `;
 
@@ -105,13 +140,25 @@ export const PlayerName = styled.div<PlayerItemProps>`
     font-size: 18px;
     line-height: 22px;
     color: ${props => props.active ? '#FCFCFC' : '#7191A5'};
+
+    display: none;
+
+    @media(min-width: 768px){
+        display: block;
+    }
 `;
 
 export const PlayerPoints = styled.div<PlayerItemProps>`
     font-weight: bold;
-    font-size: 32px;
-    line-height: 40px;
     color: ${props => props.active ? '#FCFCFC' : '#304859'};
+
+    font-size: 24px;
+    line-height: 30px;
+
+    @media(min-width: 768px) {
+        font-size: 32px;
+        line-height: 40px;        
+    }
 `;
 
 export const CurrentPlayerIndicator = styled.div<{ show: boolean, loggedInPlayer: boolean }>`
@@ -132,4 +179,5 @@ export const PlayerItemAvatar = styled.img`
     height: 30px;
     width: 30px;
     border-radius: 50%;
+    z-index: 2;
 `;
