@@ -181,3 +181,118 @@ export const PlayerItemAvatar = styled.img`
     border-radius: 50%;
     z-index: 2;
 `;
+
+export const Overlay = styled.div`
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    mix-blend-mode: normal;
+    opacity: 0.5;
+    z-index: 1;
+`;
+
+export const WinnersModal = styled.div`
+    width: 90%;
+    height: 488px;
+    background-color: #F2F2F2;
+    border-radius: 10px;
+    z-index: 3;
+    padding: 24px;
+
+    @media(min-width: 768px){
+        width: 654px;
+    }
+`;
+
+export const WinnerTitle = styled.div`
+    font-weight: bold;
+    text-align: center;
+    
+    color: #152938;
+    
+    margin-bottom: 9px;
+
+    font-size: 24px;
+    line-height: 30px;
+
+    @media(min-width: 768px){
+        font-size: 48px;
+        line-height: 60px;
+    }    
+`;
+
+export const WinnerSubTitle = styled.div`
+    font-weight: bold;   
+    text-align: center;
+    color: #7191A5;
+    margin-bottom: 24px;
+
+    font-size: 14px;
+    line-height: 17px;
+
+    @media(min-width: 768px){
+        font-size: 18px;
+        line-height: 22px;
+    }
+`;
+
+export const WinnersList = styled.div`
+    display: flex;
+    flex-direction: column;
+    
+    gap: 8px;
+    margin-bottom: 24px;
+
+    @media(min-width: 768px) {
+        gap: 16px;
+        margin-bottom: 56px;
+    }
+`;
+
+export const WinnerItem = styled.div<{ winner: boolean }>`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    padding: 16px;
+
+    background-color: ${ props => props.winner ? '#152938' : '#DFE7EC'};
+`;
+
+export const WinnerName = styled.div<{ winner: boolean }>`
+    font-weight: bold;    
+    color: ${ props => props.winner ? '#FCFCFC' : '#7191A5' };
+
+    font-size: 13px;
+    line-height: 16px;
+
+    @media(min-width: 768px) {
+        font-size: 18px;
+        line-height: 22px;
+    }
+`;
+
+export const WinnerPoints = styled.div<{ winner: boolean }>`
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 25px;
+
+    text-align: right;
+    color: ${ props => props.winner ? '#FCFCFC' : '#304859' };
+`;
+
+export const WinnersButtonsContainer = styled.div`
+    display: flex;
+    gap: 16px;
+
+    flex-direction: column;
+
+    @media(min-width: 768px){
+        flex-direction: row;
+    }
+`;
+
+export const WinnersButton = styled(Button)`
+    flex: 1;
+`;
