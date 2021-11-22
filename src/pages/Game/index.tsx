@@ -28,7 +28,18 @@ import {
     PlayerPoints,
     CurrentPlayerIndicator,
     PlayerItemAvatar,
+    Overlay,
+    WinnersModal,
+    WinnerTitle,
+    WinnerSubTitle,
+    WinnersList,
+    WinnerItem,
+    WinnerName,
+    WinnerPoints,
+    WinnersButtonsContainer,
+    WinnersButton,
 } from './styles';
+import { Button } from '../../components/Button';
 
 type GameProps = {
 
@@ -196,6 +207,8 @@ export const Game = ({
     );
 
     const renderWinner = () => {
+        if (!founded.length) return null;
+
         const foundedGrouped: {name: string,  count: number}[] = [];
         players.forEach(p => p && foundedGrouped.push({ name: p.name, count: founded.filter(f => f.foundedBy === p.id).length }));
 
@@ -204,7 +217,47 @@ export const Game = ({
 
         return (
             <>
-                { `${ (winners.length === 1 ? 'The winner is ' : `It's a draw between: `)} ${ winners.map(w => w.name).join(', ') }` }
+                <Overlay />
+                <WinnersModal>
+                    <WinnerTitle>
+                        {(winners.length > 1 ? `It's a tie!` : `${ winners[0].name} Wins!`)}
+                    </WinnerTitle>
+                    <WinnerSubTitle>
+                        Game over! Here are the results...
+                    </WinnerSubTitle>
+                    <WinnersList>
+                        { sorted.map(w => ( 
+                            <WinnerItem
+                                key={w.name + '_winner'}
+                                winner={winners.some(ww => ww.name === w.name)}
+                            >
+                                <WinnerName
+                                    winner={winners.some(ww => ww.name === w.name)}
+                                >
+                                    { w.name }
+                                </WinnerName>
+                                <WinnerPoints
+                                    winner={winners.some(ww => ww.name === w.name)}
+                                >
+                                    { w.count / 2 } pairs
+                                </WinnerPoints>
+                            </WinnerItem>
+                        )) }
+                    </WinnersList>
+                    <WinnersButtonsContainer>
+                        <WinnersButton
+                            onClick={handleRestartGame}
+                        >
+                            Restart
+                        </WinnersButton>
+                        <WinnersButton
+                            onClick={handleNewGame}
+                            variant="opaque"
+                        >
+                            Setup New Game
+                        </WinnersButton>
+                    </WinnersButtonsContainer>
+                </WinnersModal>
             </>
         );
     };
@@ -212,21 +265,17 @@ export const Game = ({
     const handleRestartGame = async () => {
         const restarted = await restartGame(currentGameKey, cards);
 
-        if (restarted) setCurrentSelection(null);
+        console.log('restarted', restarted)
+
+        if (restarted) {
+            setCurrentSelection(null);
+            setFounded([]);
+            history.push(`/game/${currentGameKey}`)
+        }
     }
 
     const handleNewGame = async () => {
-        const newGameKey = await createGameFromExistent(currentGameKey);
-
-        if (newGameKey) {
-            setCurrentSelection(null);
-            setTheme('');
-            setFounded([]);
-            setCards([]);
-            setPlayers([]);
-            changeCurrentGameKey(newGameKey);
-            history.push(`/game/${newGameKey}`);
-        };
+        history.push(`/new-game`);
     }
 
     useEffect(() => {
