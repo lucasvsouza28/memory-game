@@ -3,6 +3,7 @@ import {
     useState
 } from 'react';
 import * as Icons from 'react-icons/gi';
+import { BsCheckLg } from 'react-icons/bs'
 import { useHistory, useRouteMatch } from 'react-router';
 import { Title } from '../../components/Title';
 import { useGameContext } from '../../contexts/game';
@@ -39,6 +40,7 @@ import {
     ModalMenu,
 } from './styles';
 import { Modal } from '../../components/Modal';
+import { Button } from '../../components/Button';
 
 type GameProps = {
 
@@ -60,6 +62,7 @@ export const Game = ({
     const [currentSelection, setCurrentSelection] = useState<SelectedCardType | null>(null);
     const [isMobile, setIsMobile] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false);
+    const [shared, setShared] = useState(false)
     const route = useRouteMatch();
     const history = useHistory();
 
@@ -277,6 +280,11 @@ export const Game = ({
         history.push(`/new-game`);
     }
 
+    const handleShare = () => {
+        navigator.clipboard.writeText(`${window.location.origin}/game/${currentGameKey}/join`);
+        setShared(true);
+    }
+
     useEffect(() => {
         changeCurrentGameKey((route.params as any).key);
     }, [])
@@ -324,6 +332,15 @@ export const Game = ({
         setIsMobile(window.innerWidth < 768);        
     }, []);
 
+    const getColor = () => {        
+        
+        setTimeout(() => {
+            setShared(false);
+        }, 800);
+        
+        return shared;
+    }
+
     return (
         <Container>
             <HeaderContainer>
@@ -341,6 +358,18 @@ export const Game = ({
                         onClick={handleNewGame}
                     >
                         New Game
+                    </HeaderButton>
+
+                    <HeaderButton
+                        variant="opaque"
+                        onClick={handleShare}
+                        style={{
+                            transition: 'all .2s linear',
+                            backgroundColor: getColor() ? 'green' : '#DFE7EC',
+                            color: getColor() ? '#FFF' : '#304859',
+                        }}
+                    >
+                        { shared ? <BsCheckLg color="#fff" /> : 'Share' }
                     </HeaderButton>
 
                     <HeaderAvatar
@@ -371,6 +400,17 @@ export const Game = ({
                         onClick={handleNewGame}
                     >
                         Setup New Game
+                    </WinnersButton>
+                    <WinnersButton
+                        variant="opaque"
+                        onClick={handleShare}
+                        style={{
+                            transition: 'all .2s linear',
+                            backgroundColor: getColor() ? 'green' : '#DFE7EC',
+                            color: getColor() ? '#FFF' : '#304859',
+                        }}
+                    >
+                        { shared ? <BsCheckLg color="#fff" /> : 'Share' }
                     </WinnersButton>
                     <WinnersButton
                         onClick={() => setMenuOpen(false)}

@@ -149,7 +149,10 @@ export const createGame = async (theme: 'Numbers' | 'Icons', gridSize: number, p
     return '';
 };
 
-export const joinExistingGame = async (gameKey: string, user: UserType) => {
+export const joinExistingGame = async (gameKey: string, user: UserType | null) => {
+
+    if (!user) return;
+
     const gameRef = database.ref(`/games/${gameKey}`);
     const gameVal = (await gameRef.get()).val() as GameType;
 
