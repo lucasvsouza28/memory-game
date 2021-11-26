@@ -102,7 +102,7 @@ export const getCardsAsIcons = (gridSize: number): CardType[] => {
     return newCards;
 }
 
-const createGameCards = async (theme: string, gridSize: number): CardType[] => {
+const createGameCards = async (theme: string, gridSize: number): Promise<CardType[]> => {
     if (theme === 'Numbers') return await getCardsAsNumbers(gridSize);
     else return await getCardsAsIcons(gridSize);
 }

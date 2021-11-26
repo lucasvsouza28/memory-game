@@ -3,13 +3,9 @@ import {
     Container
 } from './styles';
 
-type Props = {
+interface Props extends React.HTMLAttributes<HTMLElement> {
     variant?: 'primary' | 'secondary' | 'opaque';
     active?: boolean;
-    children: ReactNode;
-    className?: string;
-    style?: CSSProperties;
-    onClick?: Function;
 }
 
 export const Button = ({
