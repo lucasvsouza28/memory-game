@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
+import { Button } from "../../components/Button";
 import { Title } from "../../components/Title";
 import { useGameContext } from "../../contexts/game";
 import { joinExistingGame } from "../../services/game";
@@ -12,16 +13,18 @@ export const JoinGame = ({
     const route = useRouteMatch();
     const history = useHistory();
     const {
-        changeCurrentGameKey,
         user,
+        changeCurrentGameKey,
+        currentGameKey,
     } = useGameContext();
 
     useEffect(() => {
-
+        const key = (route.params as any).key;
+        
         const join = async () => {
-            const key = (route.params as any).key;
-            if (key){
-                const joined = await joinExistingGame(key, user!);
+            if (user && key) {
+                const joined = await joinExistingGame(key, user!)
+                changeCurrentGameKey(key);
 
                 if (joined) {
                     history.push(`/game/${key}`);
@@ -32,12 +35,26 @@ export const JoinGame = ({
         }
 
         join();
-    }, [])
+
+    }, [user])
 
     return (
         <SC.Container>
             <Title variant="secondary" />
-            { gameFull && <SC.Message>Game's already full 😢</SC.Message>  }
+            { gameFull &&
+                <>
+                    <SC.Message>
+                        Game's already full 😢 .. but ...
+                    </SC.Message>
+                    <Button
+                        onClick={() => history.push(`/game/${currentGameKey}`)}
+                        style={{
+                            paddingLeft: '21px' ,
+                            paddingRight: '21px' 
+                        }}
+                    >You can spectate</Button>
+                </>
+            }
         </SC.Container>
     )
 }
