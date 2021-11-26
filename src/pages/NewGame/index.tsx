@@ -109,16 +109,15 @@ export const NewGame = () => {
                     >
                         Start Game
                     </StartGameButton>
-                    <Button
+                    <StartGameButton
                         style={{
-                            width: '100%',
                             marginTop: '1rem',
                         }}
                         variant="secondary"
                         onClick={handleJoinGame}
                     >
                         Join Game
-                    </Button>
+                    </StartGameButton>
                 </Row>
             </section>
         </Container>
