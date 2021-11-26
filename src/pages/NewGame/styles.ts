@@ -51,7 +51,15 @@ export const RowTitle = styled.h3`
     }
 `;
 
-export const ThemeButton = styled(Button)`
+const NewGameButton = styled(Button)`
+    @media(min-width: 768px){
+        font-size: 26px;
+        line-height: 32px;
+        width: 256px;
+    }
+`;
+
+export const ThemeButton = styled(NewGameButton)`
     width: 134px;
 
     @media(min-width: 768px){
@@ -59,7 +67,7 @@ export const ThemeButton = styled(Button)`
     }
 `;
 
-export const NumberButton = styled(Button)`
+export const NumberButton = styled(NewGameButton)`
     width: 62px;
 
     @media(min-width: 768px){
@@ -69,4 +77,12 @@ export const NumberButton = styled(Button)`
 
 export const StartGameButton = styled(Button)`
     width: 100%;
+
+    font-size: 18px;
+    line-height: 22px;
+
+    @media(min-width: 768px){
+        font-size: 32px;
+        line-height: 40px;
+    }
 `;

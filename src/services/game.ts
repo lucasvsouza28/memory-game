@@ -102,14 +102,21 @@ export const getCardsAsIcons = (gridSize: number): CardType[] => {
     return newCards;
 }
 
+const createGameCards = async (theme: string, gridSize: number): CardType[] => {
+    if (theme === 'Numbers') return await getCardsAsNumbers(gridSize);
+    else return await getCardsAsIcons(gridSize);
+}
+
 export const restartGame = async (gameKey: string, cards: CardType[]): Promise<boolean> => {
     const gameRef = database.ref(`/games/${gameKey}`);
     const gameVal = (await gameRef.get()).val() as GameType;
 
     if (gameRef && gameVal) {
-        gameRef.set({
+        const cards = await createGameCards(gameVal.theme, gameVal.gridSize);
+
+        await gameRef.set({
             ...gameVal,
-            cards: [...cards.map(c => ({ ...c, active: false, foundedBy: null}))],
+            cards,
             currentPlayer: { ...gameVal.players[0] },
         } as GameType);
 
@@ -144,10 +151,12 @@ export const createGame = async (theme: 'Numbers' | 'Icons', gridSize: number, p
     const gamesRef = database.ref('/games');
 
     if (gamesRef) {
+        const cards = await createGameCards(theme, gridSize);
+
         const newGame = await gamesRef.push({
             theme,
             gridSize,
-            cards: theme === 'Numbers' ? await getCardsAsNumbers(gridSize) : await getCardsAsIcons(gridSize),
+            cards,
             closed: false,
             foundedCards: [],
             players: [{ ...user }],

@@ -27,9 +27,7 @@ import {
     PlayerName,
     PlayerPoints,
     CurrentPlayerIndicator,
-    PlayerItemAvatar,
-    Overlay,
-    WinnersModal,
+    PlayerItemAvatar,    
     WinnerTitle,
     WinnerSubTitle,
     WinnersList,
@@ -38,8 +36,10 @@ import {
     WinnerPoints,
     WinnersButtonsContainer,
     WinnersButton,
+    MenuButton,
+    ModalMenu,
 } from './styles';
-import { Button } from '../../components/Button';
+import { Modal } from '../../components/Modal';
 
 type GameProps = {
 
@@ -59,6 +59,8 @@ export const Game = ({
     const [cards, setCards] = useState<CardType[]>([]);
     const [founded, setFounded] = useState<CardType[]>([]);
     const [currentSelection, setCurrentSelection] = useState<SelectedCardType | null>(null);
+    const [isMobile, setIsMobile] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false);
     const route = useRouteMatch();
     const history = useHistory();
 
@@ -206,9 +208,9 @@ export const Game = ({
         </PlayersListContainer>
     );
 
-    const renderWinner = () => {
+    const renderWinners = () => {
         if (!founded.length) return null;
-
+        
         const foundedGrouped: {name: string,  count: number}[] = [];
         players.forEach(p => p && foundedGrouped.push({ name: p.name, count: founded.filter(f => f.foundedBy === p.id).length }));
 
@@ -217,8 +219,9 @@ export const Game = ({
 
         return (
             <>
-                <Overlay />
-                <WinnersModal>
+                <Modal
+                    open={true}
+                >
                     <WinnerTitle>
                         {(winners.length > 1 ? `It's a tie!` : `${ winners[0].name} Wins!`)}
                     </WinnerTitle>
@@ -257,20 +260,19 @@ export const Game = ({
                             Setup New Game
                         </WinnersButton>
                     </WinnersButtonsContainer>
-                </WinnersModal>
+                </Modal>
             </>
         );
     };
 
     const handleRestartGame = async () => {
+        setMenuOpen(false);
         const restarted = await restartGame(currentGameKey, cards);
-
-        console.log('restarted', restarted)
 
         if (restarted) {
             setCurrentSelection(null);
             setFounded([]);
-            history.push(`/game/${currentGameKey}`)
+            handleGameEnded(false);
         }
     }
 
@@ -312,6 +314,19 @@ export const Game = ({
             }
     }, [cards, founded]);
 
+    useEffect(() => {
+        function handleResize() {
+            setIsMobile(window.innerWidth < 768);
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);        
+    }, []);
+
     return (
         <Container>
             <HeaderContainer>
@@ -335,8 +350,41 @@ export const Game = ({
                         src={user?.avatar}
                     />
                 </ButtonsContainer>
+                <MenuButton
+                    onClick={() => setMenuOpen(o => !o)}
+                    style={{
+                    }}
+                >
+                    Menu
+                </MenuButton>
             </HeaderContainer>
-            { gameEnded ? renderWinner() : renderGame() }
+
+            { isMobile ? (
+                <ModalMenu
+                    open={menuOpen}
+                >
+                    <WinnersButton
+                        variant="opaque"
+                        onClick={handleRestartGame}
+                    >
+                        Restart
+                    </WinnersButton>
+                    <WinnersButton
+                        variant="opaque"
+                        onClick={handleNewGame}
+                    >
+                        Setup New Game
+                    </WinnersButton>
+                    <WinnersButton
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        Resume
+                    </WinnersButton>
+                </ModalMenu>
+
+            ) : null }
+
+            { gameEnded ? renderWinners() : renderGame() }
         </Container>
     )
 }

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button } from '../../components/Button';
+import { Modal } from '../../components/Modal';
 
 export const Container = styled.main`
     display: flex;
@@ -38,10 +39,22 @@ export const HeaderAvatar = styled.img`
 `;
 
 export const ButtonsContainer = styled.div`
-    display: flex;
     flex-direction: row;
     align-items: flex-start;
     gap: 16px;
+    display: none;
+
+    @media(min-width: 768px){
+        display: flex;
+    }
+`;
+
+export const MenuButton = styled(Button)`
+    width: 80px;
+
+    @media(min-width: 768px){
+        display: none;
+    }
 `;
 
 type CardsContainerProps = {
@@ -182,29 +195,6 @@ export const PlayerItemAvatar = styled.img`
     z-index: 2;
 `;
 
-export const Overlay = styled.div`
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    background: #000000;
-    mix-blend-mode: normal;
-    opacity: 0.5;
-    z-index: 1;
-`;
-
-export const WinnersModal = styled.div`
-    width: 90%;
-    height: 488px;
-    background-color: #F2F2F2;
-    border-radius: 10px;
-    z-index: 3;
-    padding: 24px;
-
-    @media(min-width: 768px){
-        width: 654px;
-    }
-`;
-
 export const WinnerTitle = styled.div`
     font-weight: bold;
     text-align: center;
@@ -295,4 +285,8 @@ export const WinnersButtonsContainer = styled.div`
 
 export const WinnersButton = styled(Button)`
     flex: 1;
+`;
+
+export const ModalMenu = styled(Modal)`
+    gap: 12px;
 `;

@@ -32,8 +32,8 @@ export const Container = styled.button<Props>`
     padding: 11px 0;
 
     @media(min-width: 768px) {
-        font-size: 26px;
-        line-height: 32px;
+        font-size: 20px;
+        line-height: 25px;
         height: 52px;
     }
 `;
