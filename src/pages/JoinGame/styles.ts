@@ -9,4 +9,7 @@ export const Container = styled.div`
     width: 100vw;
 `;
 
-export const Message = styled.div``;
+export const Message = styled.div`
+    font-size: 20px;
+    margin-bottom: 20px;
+`;
