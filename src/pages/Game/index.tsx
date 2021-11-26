@@ -1,5 +1,4 @@
 import {
-    Component,
     useEffect,
     useState
 } from 'react';
@@ -11,7 +10,7 @@ import { database } from '../../services/firebase';
 import { CardType } from '../../types/Card';
 import { GameType } from '../../types/GameType';
 import { UserType } from '../../types/User';
-import { restartGame, createGameFromExistent} from '../../services/game';
+import { restartGame } from '../../services/game';
 import { FlipCard } from './components/FlipCard';
 
 import {
@@ -56,7 +55,7 @@ export const Game = ({
     const [players, setPlayers] = useState<UserType[]>([]);
     const [currentPlayer, setCurrentPlayer] = useState<UserType | null>(null);
     const [gridSize, setGridSize] = useState(4);
-    const [cards, setCards] = useState<CardType[]>([]);
+    const [cards, setCards] = useState<CardType[]>([]);    
     const [founded, setFounded] = useState<CardType[]>([]);
     const [currentSelection, setCurrentSelection] = useState<SelectedCardType | null>(null);
     const [isMobile, setIsMobile] = useState(false)
@@ -144,13 +143,11 @@ export const Game = ({
                 cols={gridSize}
             >
                 <ul>
-                    { cards
-                    //.sort((a, b) => a.order > b.order ? -1 : b.order < a.order ? 1 : 0)
-                    .map((c, i) => (
+                    { cards.map((c, i) => (
                         <li
                             key={c.value + '_' + i}
                         >
-                            <FlipCard
+                            <FlipCard 
                                 gameKey={currentGameKey}
                                 cards={cards}
                                 card={c}

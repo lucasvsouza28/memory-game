@@ -14,7 +14,7 @@ export const getCardsAsNumbers = (gridSize: number): CardType[] => {
         
         while(newCards.some(c => c.value === number.toString())) number = getNewNumber(gridSize * gridSize);
 
-        const newCard: CardType = { id: '', cardKey: number.toString(), value: number.toString(), active: false, order: -1 };
+        const newCard: CardType = { id: '', cardKey: uuid(), value: number.toString(), active: false, order: -1 };
 
         newCards.push({ ...newCard, id: uuid() });
         newCards.push({ ...newCard, id: uuid() });
@@ -83,7 +83,7 @@ export const getCardsAsIcons = (gridSize: number): CardType[] => {
             icon = icons[number];
         }
 
-        const newCard: CardType = { id: '', cardKey: number.toString(), value: icon, active: false, order: -1 };
+        const newCard: CardType = { id: '', cardKey: uuid(), value: icon, active: false, order: -1 };
 
         newCards.push({ ...newCard, id: uuid() });
         newCards.push({ ...newCard, id: uuid() });
@@ -102,7 +102,7 @@ export const getCardsAsIcons = (gridSize: number): CardType[] => {
     return newCards;
 }
 
-const createGameCards = async (theme: string, gridSize: number): CardType[] => {
+const createGameCards = async (theme: string, gridSize: number): Promise<CardType[]> => {
     if (theme === 'Numbers') return await getCardsAsNumbers(gridSize);
     else return await getCardsAsIcons(gridSize);
 }
@@ -126,27 +126,6 @@ export const restartGame = async (gameKey: string, cards: CardType[]): Promise<b
     return false;
 }
 
-export const createGameFromExistent = async (gameKey: string): Promise<string | null> => {
-    const gamesRef = database.ref(`/games`); 
-    const gameRef = database.ref(`/games/${gameKey}`);
-    const gameVal = (await gameRef.get()).val() as GameType;
-
-    if (gameRef && gameVal) {
-        const newGame = await gamesRef.push({
-            theme: gameVal.theme,
-            cards: gameVal.theme === 'Numbers' ? await getCardsAsNumbers(gameVal.gridSize) : await getCardsAsIcons(gameVal.gridSize),
-            players: [ ...gameVal.players ],
-            currentPlayer: { ...gameVal.players[0] },
-            gridSize: gameVal.gridSize,
-            playersCount: gameVal.playersCount,
-        } as GameType);
-
-        return newGame.key;
-    }
-
-    return '';
-}
-
 export const createGame = async (theme: 'Numbers' | 'Icons', gridSize: number, playersCount: number, user: UserType) => {
     const gamesRef = database.ref('/games');
 
@@ -156,7 +135,7 @@ export const createGame = async (theme: 'Numbers' | 'Icons', gridSize: number, p
         const newGame = await gamesRef.push({
             theme,
             gridSize,
-            cards,
+            cards: cards.sort((a, b) => a.order > b.order ? -1 : b.order < a.order ? 1 : 0),
             closed: false,
             foundedCards: [],
             players: [{ ...user }],

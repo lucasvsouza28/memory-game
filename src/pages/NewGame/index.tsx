@@ -56,7 +56,7 @@ export const NewGame = () => {
                                 key={t}
                                 variant="secondary"
                                 active={theme === t}
-                                onClick={() => setTheme(t)}
+                                onClick={() => setTheme(t as 'Numbers' | 'Icons')}
                             >
                                 { t }
                             </ThemeButton>
