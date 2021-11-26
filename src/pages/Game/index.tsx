@@ -2,6 +2,7 @@ import {
     useEffect,
     useState
 } from 'react';
+import { Shimmer } from 'react-shimmer';
 import * as Icons from 'react-icons/gi';
 import { BsCheckLg } from 'react-icons/bs'
 import { useHistory, useRouteMatch } from 'react-router';
@@ -38,9 +39,9 @@ import {
     WinnersButton,
     MenuButton,
     ModalMenu,
+    ShimmerContainer,
 } from './styles';
 import { Modal } from '../../components/Modal';
-import { Button } from '../../components/Button';
 
 type GameProps = {
 
@@ -53,6 +54,7 @@ type SelectedCardType = {
 
 export const Game = ({
 }: GameProps) => {
+    const [loading, setLoading] = useState(true);
     const [theme, setTheme] = useState('');
     const [players, setPlayers] = useState<UserType[]>([]);
     const [currentPlayer, setCurrentPlayer] = useState<UserType | null>(null);
@@ -139,40 +141,51 @@ export const Game = ({
     }
 
     const renderGame = () => (
-        <MainSection
-            cols={gridSize}
-        >
-            <CardsContainer
-                cols={gridSize}
-            >
-                <ul>
-                    { cards.map((c, i) => (
-                        <li
-                            key={c.value + '_' + i}
-                        >
-                            <FlipCard 
-                                gameKey={currentGameKey}
-                                cards={cards}
-                                card={c}
-                                pairFounded={founded.some(f => f.value === c.value)}
-                                onSelected={handleCardSelected}
-                                currentPlayerId={currentPlayer?.id}
-                                userId={user?.id}
-                            >
-                                {
-                                    theme === 'Numbers' ? (
-                                        c.value
-                                    ) : (
-                                        getIcon(c.value)
-                                    )
-                                }
-                            </FlipCard>
-                        </li>
-                    )) }
-                </ul>
-            </CardsContainer>
-            { players.length > 0 && renderPlayersList() }
-        </MainSection>
+        <>
+            { loading ? (
+                <ShimmerContainer>
+                    <Shimmer width={600} height={70} />
+                    <Shimmer width={600} height={70} />
+                    <Shimmer width={600} height={70} />
+                    <Shimmer width={600} height={70} />                    
+                </ShimmerContainer>
+            ) : (
+                <MainSection
+                    cols={gridSize}
+                >
+                    <CardsContainer
+                        cols={gridSize}
+                    >
+                        <ul>
+                            { cards.map((c, i) => (
+                                <li
+                                    key={c.value + '_' + i}
+                                >
+                                    <FlipCard 
+                                        gameKey={currentGameKey}
+                                        cards={cards}
+                                        card={c}
+                                        pairFounded={founded.some(f => f.value === c.value)}
+                                        onSelected={handleCardSelected}
+                                        currentPlayerId={currentPlayer?.id}
+                                        userId={user?.id}
+                                    >
+                                        {
+                                            theme === 'Numbers' ? (
+                                                c.value
+                                            ) : (
+                                                getIcon(c.value)
+                                            )
+                                        }
+                                    </FlipCard>
+                                </li>
+                            )) }
+                        </ul>
+                    </CardsContainer>
+                    { players.length > 0 && renderPlayersList() }
+                </MainSection>
+            ) }
+        </>    
     );
 
     const isPlayerActive = (player: UserType) => currentPlayer?.id === player.id && player.id === user?.id;
@@ -300,6 +313,7 @@ export const Game = ({
                 return;
             };
 
+            setLoading(false);
             setTheme(gameVal.theme);
             setGridSize(gameVal.gridSize);
             setCards([...gameVal.cards]);
@@ -372,9 +386,16 @@ export const Game = ({
                         { shared ? <BsCheckLg color="#fff" /> : 'Share' }
                     </HeaderButton>
 
-                    <HeaderAvatar
-                        src={user?.avatar}
-                    />
+                    { !user ?
+                        (
+                            <Shimmer width={40} height={40} />
+                        ) : (
+                            <HeaderAvatar
+                                src={user?.avatar}
+                            />
+                        )
+                    }
+                    
                 </ButtonsContainer>
                 <MenuButton
                     onClick={() => setMenuOpen(o => !o)}

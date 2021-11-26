@@ -31,9 +31,13 @@ export const ButtonsContainer = styled.div`
     justify-content: space-between;
 `;
 
-export const Row = styled.div`    
-
+export const Row = styled.div`
     margin-bottom: 32px;
+
+    &:last-child{
+        margin-bottom: 0;
+        margin-top: 45px;
+    }
 `;
 
 export const RowTitle = styled.h3`

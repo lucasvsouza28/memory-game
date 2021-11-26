@@ -290,3 +290,9 @@ export const WinnersButton = styled(Button)`
 export const ModalMenu = styled(Modal)`
     gap: 12px;
 `;
+
+export const ShimmerContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
