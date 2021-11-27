@@ -103,8 +103,11 @@ export const getCardsAsIcons = (gridSize: number): CardType[] => {
 }
 
 const createGameCards = async (theme: string, gridSize: number): Promise<CardType[]> => {
-    if (theme === 'Numbers') return await getCardsAsNumbers(gridSize);
-    else return await getCardsAsIcons(gridSize);
+    let cards = [];
+    if (theme === 'Numbers') cards = await getCardsAsNumbers(gridSize);
+    else cards = await getCardsAsIcons(gridSize);
+
+    return cards.sort((a, b) => a.order > b.order ? -1 : b.order < a.order ? 1 : 0)
 }
 
 export const restartGame = async (gameKey: string, cards: CardType[]): Promise<boolean> => {
@@ -135,7 +138,7 @@ export const createGame = async (theme: 'Numbers' | 'Icons', gridSize: number, p
         const newGame = await gamesRef.push({
             theme,
             gridSize,
-            cards: cards.sort((a, b) => a.order > b.order ? -1 : b.order < a.order ? 1 : 0),
+            cards,
             closed: false,
             foundedCards: [],
             players: [{ ...user }],
