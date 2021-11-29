@@ -10,7 +10,7 @@ This project is a challenge from [frontendmentor.io](https://www.frontendmentor.
 - React
 - Firebase (Authentication / Realtime Database)
 - Styled Components
-- Netlifly
+- Netlify
 
 ## Running locally
 
@@ -18,6 +18,9 @@ This project is a challenge from [frontendmentor.io](https://www.frontendmentor.
 - Run `yarn` or `npm i`
 - Run `yarn dev` or `npm run dev` to start Vite in development mode
 - Run `yarn build` to build for production
+
+> you will also need a project on Google Firebase with authentication and Realtime Database enabled.
+> Check the needed env variables on `src/services/firebase.ts` file
 
 ## Where is it published?
 Currently published at [Netlify](http://memory-game-fem.netlify.app/)
