@@ -20,21 +20,16 @@ export const Login = () => {
     }, [user])
 
     return (
-        <>
-            { //!user &&
-            (
-                <SC.Container>
-                    <SC.FormContainer>
-                        <Title />
-                        <SC.LoginButton
-                            onClick={sigin}
-                        >
-                            <FcGoogle size="32" />
-                            Entre com Google
-                        </SC.LoginButton>
-                    </SC.FormContainer>
-                </SC.Container>
-            )}
-        </>
+        <SC.Container>
+            <SC.FormContainer>
+                <Title />
+                <SC.LoginButton
+                    onClick={sigin}
+                >
+                    <FcGoogle size="32" />
+                    Login with Google
+                </SC.LoginButton>
+            </SC.FormContainer>
+        </SC.Container>
     );
 };
