@@ -137,7 +137,7 @@ export const Game = ({
     const getIcon = (icon: string) => {
         if (!(icon in Icons)) return null;
 
-        return <> { (Icons as any)[icon]() } </>;
+        return <> { (Icons as any)[icon]({ size: 25 }) } </>;
     }
 
     const renderGame = () => (
